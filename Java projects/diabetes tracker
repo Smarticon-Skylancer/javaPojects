@@ -1,0 +1,79 @@
+import java.util.*;
+
+public class DiabetesTracker {
+    static class Reading {
+        Date timestamp;
+        double bloodSugar;
+        String note;
+
+        Reading(double bloodSugar, String note) {
+            this.timestamp = new Date();
+            this.bloodSugar = bloodSugar;
+            this.note = note;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("Time: %s | Blood Sugar: %.2f mg/dL | Note: %s",
+                    timestamp.toString(), bloodSugar, note == null ? "" : note);
+        }
+    }
+
+    private List<Reading> log = new ArrayList<>();
+
+    public void addReading(double bloodSugar, String note) {
+        log.add(new Reading(bloodSugar, note));
+    }
+
+    public void displayLog() {
+        if (log.isEmpty()) {
+            System.out.println("No readings logged yet.");
+            return;
+        }
+        System.out.println("---- Diabetes Log ----");
+        for (Reading r : log) {
+            System.out.println(r);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        DiabetesTracker tracker = new DiabetesTracker();
+
+        while (true) {
+            System.out.println("\nDiabetes Tracker Menu:");
+            System.out.println("1. Add Blood Sugar Reading");
+            System.out.println("2. View Log");
+            System.out.println("3. Exit");
+            System.out.print("Choose an option: ");
+            int choice;
+            try {
+                choice = Integer.parseInt(scanner.nextLine());
+            } catch (Exception e) {
+                System.out.println("Invalid input. Try again.");
+                continue;
+            }
+
+            if (choice == 1) {
+                try {
+                    System.out.print("Enter blood sugar level (mg/dL): ");
+                    double bs = Double.parseDouble(scanner.nextLine());
+                    System.out.print("Enter a note (optional): ");
+                    String note = scanner.nextLine();
+                    tracker.addReading(bs, note);
+                    System.out.println("Reading added.");
+                } catch (Exception e) {
+                    System.out.println("Invalid number, try again.");
+                }
+            } else if (choice == 2) {
+                tracker.displayLog();
+            } else if (choice == 3) {
+                System.out.println("Goodbye!");
+                break;
+            } else {
+                System.out.println("Invalid option, try again.");
+            }
+        }
+        scanner.close();
+    }
+}
